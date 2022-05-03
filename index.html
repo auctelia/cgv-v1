@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Auctelia - Conditions générales de vente</title>
+    <script type="module">
+      import { getEndpoint, createClient } from 'https://cdn.skypack.dev/@prismicio/client'
+      import { asHTML } from 'https://cdn.skypack.dev/@prismicio/helpers'
+
+      const repoName = 'auctelia'
+      const endpoint = getEndpoint(repoName)
+      const client = createClient(endpoint)
+
+      const init = async () => {
+        const prismicDoc = await client.getByUID('static-pages', 'terms-fr')
+        const { title, body } = prismicDoc.data
+        const titleHTML = asHTML(title)
+        const bodyHTML = asHTML(body)
+        const container = document.getElementById('container')
+        container.innerHTML = titleHTML + bodyHTML
+      }
+
+      init()
+    </script>
+  </head>
+  <body>
+    <a href="https://www.auctelia.com">
+      <img src="https://www.auctelia.com/img/logo.png" alt="Auctelia" />
+    </a>
+    <div id="container"></div>
+  </body>
+</html>
