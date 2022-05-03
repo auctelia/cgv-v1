@@ -3,20 +3,46 @@
   <head>
     <title>Auctelia - Conditions générales de vente</title>
     <script type="module">
-      import { getEndpoint, createClient } from 'https://cdn.skypack.dev/@prismicio/client'
-      import { asHTML } from 'https://cdn.skypack.dev/@prismicio/helpers'
+      import { getEndpoint, createClient } from 'https://cdn.skypack.dev/@prismicio/client';
+      import { asHTML } from 'https://cdn.skypack.dev/@prismicio/helpers';
 
-      const repoName = 'auctelia'
-      const endpoint = getEndpoint(repoName)
-      const client = createClient(endpoint)
+      const repoName = 'auctelia';
+      const endpoint = getEndpoint(repoName);
+      const client = createClient(endpoint);
+
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+
+      const pagesLocales = {
+        'fr': {
+          uid: 'terms-fr',
+          lang: 'fr-be'
+        },
+        'nl': {
+          uid: 'terms-nl',
+          lang: 'nl-be'
+        },
+        'en': {
+          uid: 'terms-en',
+          lang: 'en-us'
+        }
+      };
+
+      const locale = params.lang || 'fr';
 
       const init = async () => {
-        const prismicDoc = await client.getByUID('static-pages', 'terms-fr')
-        const { title, body } = prismicDoc.data
-        const titleHTML = asHTML(title)
-        const bodyHTML = asHTML(body)
-        const container = document.getElementById('container')
-        container.innerHTML = titleHTML + bodyHTML
+        const prismicDoc = await client.getByUID(
+          'static-pages',
+          pagesLocales[locale].uid,
+          { lang: pagesLocales[locale].lang }
+        );
+
+        const { title, body } = prismicDoc.data;
+        const titleHTML = asHTML(title);
+        const bodyHTML = asHTML(body);
+        const container = document.getElementById('container');
+        container.innerHTML = titleHTML + bodyHTML;
       }
 
       init()
